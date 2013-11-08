@@ -1,0 +1,78 @@
+// trivial object
+{
+    "nature": "object",
+    "extends": null,
+    "objects": [],
+    "relations": [],
+    "properties": [], // what is this?
+    "library": null
+}
+
+// non-trivial object 1
+{
+    "nature": "object",
+    "extends": null,
+    "objects": [
+        "object1": {
+            "nature": "object",
+            "extends": null,
+            "objects": [],
+            "relations": [],
+            "properties": [],
+            "library": null
+        }],
+    "properties": null,
+    "library": null
+}
+
+// non-trivial object 2
+{
+    "nature": "object",
+    "extends": null,
+    "objects": [
+        "object1": {
+            ...
+        },
+        "object2": {
+            ...
+        }
+    ],
+    "relations": [
+        "relation1": {
+            "nature": "relation",
+            "extends": null,
+            "from": ["object1"],
+            "to": ["object2"],
+            "directional": false,
+            "properties": [
+                "property1": "value1",
+                "property2": "value2"
+                ]
+        ],
+    "properties": null,
+    "library": null
+}
+
+// trivial library
+{
+    "nature": "library",
+    "relations": [],
+    "objects": []
+}
+
+
+// non-trivial library
+{
+    "nature": "library",
+    "relations": [
+        "relation1": {
+            "nature": "relation",
+            "extends": null,
+            "from": [],
+            "to": [],
+            "directional": true,
+            "properties": []
+        }
+    ]
+}
+            

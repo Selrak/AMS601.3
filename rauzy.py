@@ -41,7 +41,10 @@ class RObject(object):
         self.properties = {}
 
     def __repr__(self):
-        return self.objects.__repr__() + "\n" + self.relations.__repr__()
+        return "objects: " + self.objects.__repr__() + "\n" \
+                + "relations: " +  self.relations.__repr__() + "\n" \
+                + "properties: " + self.properties.__repr__() + "\n" \
+                + "extends: " + str(self.prototype)
 
     @staticmethod
     def parse(data):
@@ -64,24 +67,33 @@ class RObject(object):
         if data.has_key(RELATIONS) and data[RELATIONS] is not None:
             relations = data[RELATIONS]
             for name in relations:
-                logging.debug("loading relation " + relation)
+                logging.debug("loading relation " + name)
                 obj.relations[name] = RRelation.parse(relations[name])
 
         if data.has_key(PROPERTIES) and data[PROPERTIES] is not None:
             properties = data[PROPERTIES]
             for name in properties:
-                logging.debug("loading property " + property)
+                logging.debug("loading property " + name)
                 obj.properties[name] = properties[name]
 
         return obj
 
 class RRelation(object):
-    def __self__(self):
+    def __init__(self):
         self.prototype = None
         self.from_ids = []
         self.to_ids = []
         self.directional = None
         self.properties = []
+
+    def __repr__(self):
+        return "from: " + self.from_ids.__repr__() + "\n" \
+                + "to: " +  self.to_ids.__repr__() + "\n" \
+                + "directional: " +  self.directional.__repr__() + "\n" \
+                + "properties: " + self.properties.__repr__() + "\n" \
+                + "extends: " + str(self.prototype)
+
+
     @staticmethod
     def parse(data):
         relation = RRelation()
@@ -96,13 +108,17 @@ class RRelation(object):
         if data.has_key(DIRECTIONAL) and data[DIRECTIONAL] is not None:
             relation.directional = data[DIRECTIONAL]
 
-        for id in data[FROM]:
-            logging.debug("todo: implement relation from")
-            relation.from_ids += [id]
+        if data.has_key(FROM) and data[FROM] is not None:
+            from_ids = data[FROM]
+            for id in from_ids:
+                logging.debug("todo: implement relation from")
+                relation.from_ids += [id]
 
-        for id in data[TO]:
-            logging.debug("todo: implement relation to")
-            relation.to_ids += [id]
+        if data.has_key(TO) and data[TO] is not None:
+            to_ids = data[TO]
+            for id in to_ids:
+                logging.debug("todo: implement relation to")
+                relation.to_ids += [id]
 
         return relation
 

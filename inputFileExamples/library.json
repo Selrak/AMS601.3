@@ -1,5 +1,13 @@
 {
     "nature": "library",
-    "relations": {},
-    "objects": {}
+    "objects": {
+        "object1": {
+            "nature": "object"
+        }
+    },
+    "relations": {
+        "relation1": {
+            "nature": "relation"
+        }
+    }
 }

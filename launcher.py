@@ -17,7 +17,10 @@ class Test(unittest.TestCase):
             "extends": null,
             "objects": {},
             "relations": {},
-            "properties": {},
+            "properties": {
+                "prop1": "value1",
+                "prop2": "value2"
+                },
             "library": "./inputFileExamples/library.json"
         }
         """

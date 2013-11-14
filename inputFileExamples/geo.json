@@ -25,7 +25,7 @@
     		],
     "relations": [
     		"freeTradeAgreement" : {
-			"nature" : relation",
+			"nature" : "relation",
 			"extends" : "economicalRelationship",
 			"from" : "Europe",
 			"to" : "North America",
@@ -93,14 +93,14 @@
 		"nature" : "object",
 		"extends" : null,
 		"objects" : null,
-		properties : []
+		"properties" : []
 		}
 
     	"country" : {
 		"nature" : "object",
 		"extends" : null,
 		"objects" : null,
-		properties : []
+		"properties" : []
 		}
 	],
 
@@ -117,7 +117,7 @@
 
         "peaceRelationship": {
             "nature": "relation",
-            "extends": relationship,
+            "extends": "relationship",
             "from": [],
             "to": [],
             "directional": false,
@@ -128,7 +128,7 @@
 
         "economicRelationship": {
             "nature": "relation",
-            "extends": relationship,
+            "extends": "relationship",
             "from": [],
             "to": [],
             "directional": false,

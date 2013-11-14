@@ -1,0 +1,97 @@
+"Seche-Cheveux" : {
+    "nature": "object",
+    "extends": "null",
+    "objects": [
+            "Moteur" : {
+                "nature" : "object",
+                "extends" : "null",
+                "objects" : [], // Here we can the components of the Moteur
+                "relations" : []
+                                                
+        }
+		  "Helice" : {
+                "nature" : "object",
+                "extends" : "null",
+                "objects" : [], // Here we can the components of the Moteur
+                "relations" : []
+                                                
+        }
+		  "Resistance" : {
+                "nature" : "object",
+                "extends" : "null",
+                "objects" : [], // Here we can the components of the Moteur
+                "relations" : []
+                                                
+        }
+		"Cable" : {
+			"nature" : "object",
+             "extends" : "null",
+             "objects" : [ 
+								"cable" : {
+								"nature" : "object",
+								"extends" : "null",
+								"objects" : [], // Here we can the components of the Moteur
+								"relations" : []
+                                                
+											   }
+								"Prise" : {
+								 "nature" : "object",
+								 "extends" : "null",
+								 "objects" : [], // Here we can the components of the Moteur
+								 "relations" : []
+                                                
+												}
+				
+				
+						],
+            "relations" : [
+				
+						"CabledeBranchement" : {
+                        "nature" : "relation",
+                        "extends" : "null",
+                        "from" : "Cable",
+                        "to" : "Prise",
+                        "properties" : [],
+                        "library" : "null"
+
+                        },
+				
+						  ]
+                                                
+					}
+		
+		 
+                    ],
+    "relations": [
+                    "CabledeBranchement" : {
+                        "nature" : "relation",
+                        "extends" : "null",
+                        "from" : "Cable",
+                        "to" : "Moteur",
+                        "properties" : [],
+                        "library" : "null"
+
+                        }
+						
+					 "Moteur Helice" : {
+                        "nature" : "relation",
+                        "extends" : "null",
+                        "from" : "Moteur",
+                        "to" : "Helice",
+                        "properties" : [],
+                        "library" : "null"
+
+                        }	
+						
+    "properties": [],
+    "library": "null"
+
+				]
+}
+
+
+
+
+
+
+

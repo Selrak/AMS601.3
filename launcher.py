@@ -18,7 +18,7 @@ class Test(unittest.TestCase):
             "objects": {},
             "relations": {},
             "properties": {},
-            "library": "inputFileExamples/library.json"
+            "library": "./inputFileExamples/library.json"
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))
@@ -31,8 +31,7 @@ class Test(unittest.TestCase):
             "extends": null,
             "objects": {
                 "obj1": {
-                    "nature": "object",
-
+                    "nature": "object"
                     }
                 },
             "relations": {},

@@ -124,13 +124,6 @@ class RModel(RObject):
             model.objects.update(library.objects)
             model.relations.update(library.relations)
 
-
         return model
-
-def load(filename):
-    logging.info('loading file '+ filename)
-    with open("obj.json", "r") as input:
-        data = input.read()
-        return json.loads(data)
 
 logging.info('loading rauzy module ' + version)

@@ -68,6 +68,13 @@ class RObject(object):
                 + "properties: " + self.properties.__repr__() + "\n" \
                 + "extends: " + str(self.prototype)
 
+    # method to recursively traverse the object
+    # tree and substitute string extends, from and to
+    # fields with actual references (to be done on
+    # second pass when whole the structure of the model is built
+    def update_references(self, root):
+        logging.debug("todo: implement update_references")
+
     @staticmethod
     def parse(data):
         obj = RObject()
@@ -105,7 +112,7 @@ class RRelation(object):
         self.from_ids = []
         self.to_ids = []
         self.directional = None
-        self.properties = []
+        self.properties = {}
 
     def __repr__(self):
         return "from: " + self.from_ids.__repr__() + "\n" \
@@ -169,6 +176,8 @@ class RModel(RObject):
 
             model.objects.update(library.objects)
             model.relations.update(library.relations)
+
+        model.update_references(model)
 
         return model
 

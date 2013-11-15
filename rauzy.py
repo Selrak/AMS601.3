@@ -40,6 +40,28 @@ class RObject(object):
         self.relations = {}
         self.properties = {}
 
+    def get_relation(self, name):
+        try:
+            return self.relations[name]
+        except KeyError:
+            rel = None
+            for obj_name in self.objects:
+                     rel = self.objects[obj_name].get_relation(name)
+                     if rel is not None:
+                         break
+            return rel
+
+    def get_object(self, name):
+        try:
+            return self.objects[name]
+        except KeyError:
+            obj = None
+            for obj_name in self.objects:
+                     obj = self.objects[obj_name].get_object(name)
+                     if obj is not None:
+                         break
+            return obj
+
     def __repr__(self):
         return "objects: " + self.objects.__repr__() + "\n" \
                 + "relations: " +  self.relations.__repr__() + "\n" \
@@ -53,22 +75,21 @@ class RObject(object):
         if not data.has_key(NATURE) or data[NATURE] != OBJECT:
             raise RException("object must have a nature of object")
 
-
         if data.has_key(EXTENDS) and data[EXTENDS] is not None:
             prototype_name = data[EXTENDS]
             logging.debug("TODO: implement extends")
-
-        if data.has_key(OBJECTS) and data[OBJECTS] is not None:
-            objects = data[OBJECTS]
-            for name in objects:
-                logging.debug("loading object " + name)
-                obj.objects[name] = RObject.parse(objects[name])
 
         if data.has_key(RELATIONS) and data[RELATIONS] is not None:
             relations = data[RELATIONS]
             for name in relations:
                 logging.debug("loading relation " + name)
                 obj.relations[name] = RRelation.parse(relations[name])
+
+        if data.has_key(OBJECTS) and data[OBJECTS] is not None:
+            objects = data[OBJECTS]
+            for name in objects:
+                logging.debug("loading object " + name)
+                obj.objects[name] = RObject.parse(objects[name])
 
         if data.has_key(PROPERTIES) and data[PROPERTIES] is not None:
             properties = data[PROPERTIES]
@@ -93,7 +114,6 @@ class RRelation(object):
                 + "properties: " + self.properties.__repr__() + "\n" \
                 + "extends: " + str(self.prototype)
 
-
     @staticmethod
     def parse(data):
         relation = RRelation()
@@ -108,17 +128,27 @@ class RRelation(object):
         if data.has_key(DIRECTIONAL) and data[DIRECTIONAL] is not None:
             relation.directional = data[DIRECTIONAL]
 
+        if data.has_key(PROPERTIES) and data[PROPERTIES] is not None:
+            properties = data[PROPERTIES]
+            for name in properties:
+                logging.debug("loading property " + name)
+                obj.properties[name] = properties[name]
+
         if data.has_key(FROM) and data[FROM] is not None:
             from_ids = data[FROM]
             for id in from_ids:
                 logging.debug("todo: implement relation from")
                 relation.from_ids += [id]
+        else:
+            raise RException("relation must have 'from'")
 
         if data.has_key(TO) and data[TO] is not None:
             to_ids = data[TO]
             for id in to_ids:
                 logging.debug("todo: implement relation to")
                 relation.to_ids += [id]
+        else:
+            raise RException("relation must have 'to'")
 
         return relation
 

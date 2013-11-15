@@ -25,7 +25,7 @@ class Test(unittest.TestCase):
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))
-        print(model)
+        logging.debug(model)
 
     def test1(self):
         root = """
@@ -37,13 +37,23 @@ class Test(unittest.TestCase):
                     "nature": "object"
                     }
                 },
-            "relations": {},
+            "relations": {
+                "rel1": {
+                    "nature": "relation",
+                    "from": [],
+                    "to": []
+                }
+            },
             "properties": {},
             "library": null
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))
-        print(model)
+        self.assertIsNotNone(model.get_object("obj1"))
+        self.assertIsNone(model.get_object("obj2"))
+        self.assertIsNotNone(model.get_relation("rel1"))
+        self.assertIsNone(model.get_relation("rel2"))
+        logging.debug(model)
 
 
 unittest.main()

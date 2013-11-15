@@ -7,7 +7,9 @@
     },
     "relations": {
         "relation1": {
-            "nature": "relation"
+            "nature": "relation",
+            "from": [],
+            "to": []
         }
     }
 }

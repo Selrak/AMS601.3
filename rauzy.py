@@ -3,6 +3,7 @@
 
 import json
 import logging
+import pprint
 
 version = "0.1"
 logging.basicConfig(level = logging.DEBUG)
@@ -18,6 +19,13 @@ TO="to"
 PROPERTIES="properties"
 DIRECTIONAL="directional"
 LIBRARY="library"
+
+def json_pretty_format(js):
+    return json.dumps(js, sort_keys=True, indent=4, cls=REncoder)
+
+class REncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
 
 class RPickle(object):
     @staticmethod
@@ -36,6 +44,7 @@ class RException(Exception):
 class RObject(object):
     def __init__(self):
         self.prototype = None
+        self.proto = None
         self.objects = {}
         self.relations = {}
         self.properties = {}
@@ -63,17 +72,25 @@ class RObject(object):
             return obj
 
     def __repr__(self):
-        return "objects: " + self.objects.__repr__() + "\n" \
-                + "relations: " +  self.relations.__repr__() + "\n" \
-                + "properties: " + self.properties.__repr__() + "\n" \
-                + "extends: " + str(self.prototype)
+        model = {"objects": self.objects,
+                "relations": self.relations,
+                "properties": self.properties,
+                "extends": self.prototype}
+        return json_pretty_format(model)
 
     # method to recursively traverse the object
     # tree and substitute string extends, from and to
     # fields with actual references (to be done on
     # second pass when whole the structure of the model is built
     def update_references(self, root):
-        logging.debug("todo: implement update_references")
+        if self.prototype is not None:
+            self.proto = root.get_object(self.prototype)
+            if self.proto is None:
+                raise RException("prototype " + self.prototype + " cannot be found")
+        for obj_name, obj in self.objects.iteritems():
+            obj.update_references(root)
+        for rel_name, rel in self.relations.iteritems():
+            rel.update_references(root)
 
     @staticmethod
     def parse(data):
@@ -109,17 +126,26 @@ class RObject(object):
 class RRelation(object):
     def __init__(self):
         self.prototype = None
+        self.proto = None
         self.from_ids = []
         self.to_ids = []
         self.directional = None
         self.properties = {}
 
     def __repr__(self):
-        return "from: " + self.from_ids.__repr__() + "\n" \
-                + "to: " +  self.to_ids.__repr__() + "\n" \
-                + "directional: " +  self.directional.__repr__() + "\n" \
-                + "properties: " + self.properties.__repr__() + "\n" \
-                + "extends: " + str(self.prototype)
+
+        model = {"extends": self.prototype,
+                "from": self.from_ids,
+                "to": self.to_ids,
+                "directional": self.directional,
+                "properties": self.properties}
+        return json_pretty_format(model)
+
+    def update_references(self, root):
+        if self.prototype is not None:
+            self.proto = root.get_relation(self.prototype)
+            if self.proto is None:
+                raise RException("relation " + self.prototype + " cannot be found")
 
     @staticmethod
     def parse(data):

@@ -40,12 +40,13 @@ class Test(unittest.TestCase):
             "relations": {
                 "rel1": {
                     "nature": "relation",
+                    "extends": "relation1",
                     "from": [],
                     "to": []
                 }
             },
             "properties": {},
-            "library": null
+            "library": "./inputFileExamples/library.json"
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))

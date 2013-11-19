@@ -28,6 +28,7 @@ class REncoder(json.JSONEncoder):
         return o.__dict__
 
 class RPickle(object):
+    "Persistance layer utility class"
     @staticmethod
     def text_to_dict(text):
         return json.loads(text)
@@ -37,18 +38,12 @@ class RPickle(object):
             text = myfile.read()
             return RPickle.text_to_dict(text)
 
-
 class RException(Exception):
+    "Base exception class for the Rauzy language project"
     pass
 
-class RObject(object):
-    def __init__(self):
-        self.prototype = None
-        self.proto = None
-        self.objects = {}
-        self.relations = {}
-        self.properties = {}
-
+class REntity(object):
+    "Base entity object that contains methods common to RObject, RRelation and any other object of a similar structure"
     def get_relation(self, name):
         try:
             return self.relations[name]
@@ -70,6 +65,24 @@ class RObject(object):
                      if obj is not None:
                          break
             return obj
+
+    def get_property(self, name):
+        try:
+            return self.properties[name]
+        except KeyError:
+            if self.proto is not None:
+                return self.proto.get_property(name)
+        return None
+
+
+class RObject(REntity):
+    "RObject represents Rauzy object"
+    def __init__(self):
+        self.prototype = None
+        self.proto = None
+        self.objects = {}
+        self.relations = {}
+        self.properties = {}
 
     def __repr__(self):
         model = {"objects": self.objects,
@@ -123,7 +136,8 @@ class RObject(object):
 
         return obj
 
-class RRelation(object):
+class RRelation(REntity):
+    "RRelation represents Rauzy relation"
     def __init__(self):
         self.prototype = None
         self.proto = None
@@ -186,6 +200,7 @@ class RRelation(object):
         return relation
 
 class RModel(RObject):
+    "RModel encapsulates whole the model and allows linking between objects and relation (including amoung relations and objects)"
     @staticmethod
     def parse(data):
         model = RObject.parse(data)

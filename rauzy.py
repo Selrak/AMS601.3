@@ -25,7 +25,17 @@ def json_pretty_format(js):
 
 class REncoder(json.JSONEncoder):
     def default(self, o):
-        return o.__dict__
+    # TODO: add filtering for particular
+    # fields like proto_name and
+    # dict for relation id to object mapping
+        d = o.__dict__.copy()
+        for key in ("id_to_obj", "proto"):
+            try:
+                del d[key]
+            except KeyError:
+                pass
+
+        return d
 
 class RPickle(object):
     "Persistance layer utility class"
@@ -140,6 +150,7 @@ class RRelation(REntity):
     def __init__(self):
         self.proto_name = None
         self.proto = None
+        self.id_to_obj = {}
         self.from_ids = []
         self.to_ids = []
         self.directional = None
@@ -159,6 +170,11 @@ class RRelation(REntity):
             self.proto = root.get_relation(self.proto_name)
             if self.proto is None:
                 raise RException("relation " + self.proto_name + " cannot be found")
+        for id in self.from_ids:
+            obj = root.get_object(id)
+            if obj is None:
+                raise RException("object " + id + " cannot be found")
+            self.id_to_obj[id] = obj
 
     @staticmethod
     def parse(data):

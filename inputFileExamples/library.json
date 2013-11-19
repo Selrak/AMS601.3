@@ -2,7 +2,11 @@
     "nature": "library",
     "objects": {
         "object1": {
-            "nature": "object"
+            "nature": "object",
+            "properties": {
+                "prop_parent1": "prop_parent1_value",
+                "prop_parent2": "prop_parent2_value"
+            }
         }
     },
     "relations": {

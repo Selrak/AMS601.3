@@ -31,12 +31,17 @@ class Test(unittest.TestCase):
         root = """
         {
             "nature": "object",
-            "extends": null,
+            "extends": "object1",
             "objects": {
                 "obj1": {
-                    "nature": "object"
+                    "nature": "object",
+                    "extends": "object1",
+                    "properties": {
+                        "prop_child1": "prop_child1_value",
+                        "prop_child2": "prop_child2_value"
                     }
-                },
+                }
+            },
             "relations": {
                 "rel1": {
                     "nature": "relation",

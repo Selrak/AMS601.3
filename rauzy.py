@@ -78,7 +78,7 @@ class REntity(object):
 class RObject(REntity):
     "RObject represents Rauzy object"
     def __init__(self):
-        self.prototype = None
+        self.proto_name = None
         self.proto = None
         self.objects = {}
         self.relations = {}
@@ -88,7 +88,7 @@ class RObject(REntity):
         model = {"objects": self.objects,
                 "relations": self.relations,
                 "properties": self.properties,
-                "extends": self.prototype}
+                "extends": self.proto_name}
         return json_pretty_format(model)
 
     # method to recursively traverse the object
@@ -96,10 +96,10 @@ class RObject(REntity):
     # fields with actual references (to be done on
     # second pass when whole the structure of the model is built
     def update_references(self, root):
-        if self.prototype is not None:
-            self.proto = root.get_object(self.prototype)
+        if self.proto_name is not None:
+            self.proto = root.get_object(self.proto_name)
             if self.proto is None:
-                raise RException("prototype " + self.prototype + " cannot be found")
+                raise RException("proto_name " + self.proto_name + " cannot be found")
         for obj_name, obj in self.objects.iteritems():
             obj.update_references(root)
         for rel_name, rel in self.relations.iteritems():
@@ -113,8 +113,7 @@ class RObject(REntity):
             raise RException("object must have a nature of object")
 
         if data.has_key(EXTENDS) and data[EXTENDS] is not None:
-            prototype_name = data[EXTENDS]
-            logging.debug("TODO: implement extends")
+            obj.proto_name = data[EXTENDS]
 
         if data.has_key(RELATIONS) and data[RELATIONS] is not None:
             relations = data[RELATIONS]
@@ -139,7 +138,7 @@ class RObject(REntity):
 class RRelation(REntity):
     "RRelation represents Rauzy relation"
     def __init__(self):
-        self.prototype = None
+        self.proto_name = None
         self.proto = None
         self.from_ids = []
         self.to_ids = []
@@ -148,7 +147,7 @@ class RRelation(REntity):
 
     def __repr__(self):
 
-        model = {"extends": self.prototype,
+        model = {"extends": self.proto_name,
                 "from": self.from_ids,
                 "to": self.to_ids,
                 "directional": self.directional,
@@ -156,10 +155,10 @@ class RRelation(REntity):
         return json_pretty_format(model)
 
     def update_references(self, root):
-        if self.prototype is not None:
-            self.proto = root.get_relation(self.prototype)
+        if self.proto_name is not None:
+            self.proto = root.get_relation(self.proto_name)
             if self.proto is None:
-                raise RException("relation " + self.prototype + " cannot be found")
+                raise RException("relation " + self.proto_name + " cannot be found")
 
     @staticmethod
     def parse(data):
@@ -169,7 +168,7 @@ class RRelation(REntity):
             raise RException("relation must have nature of relation")
 
         if data.has_key(EXTENDS) and data[EXTENDS] is not None:
-            relation.prototype = data[EXTENDS]
+            relation.proto_name = data[EXTENDS]
             logging.debug("todo: implement extends")
 
         if data.has_key(DIRECTIONAL) and data[DIRECTIONAL] is not None:

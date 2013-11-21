@@ -39,7 +39,14 @@ class Test(unittest.TestCase):
                     "properties": {
                         "prop_child1": "prop_child1_value",
                         "prop_child2": "prop_child2_value"
-                    }
+                    },
+                    "relations": {
+                            "internal_relation1": {
+                            "nature": "relation",
+                            "from": [],
+                            "to": []
+                            }
+                        }
                 },
                 "obj3": {
                     "nature": "object"

@@ -20,9 +20,6 @@ PROPERTIES="properties"
 DIRECTIONAL="directional"
 LIBRARY="library"
 
-def json_pretty_format(js):
-    return json.dumps(js, sort_keys=True, indent=4, cls=REncoder)
-
 class REncoder(json.JSONEncoder):
     def default(self, o):
         d = o.__dict__.copy()
@@ -44,6 +41,10 @@ class RPickle(object):
         with open(filename, 'r') as myfile:
             text = myfile.read()
             return RPickle.text_to_dict(text)
+    @staticmethod
+    def json_pretty_format(js):
+        return json.dumps(js, sort_keys=True, indent=4, cls=REncoder)
+
 
 class RException(Exception):
     "Base exception class for the Rauzy language project"
@@ -85,7 +86,7 @@ class REntity(object):
 class RObject(REntity):
     "RObject represents Rauzy object"
     def __init__(self):
-        self.proto_name = None
+        self.extends = None
         self.proto = None
         self.objects = {}
         self.relations = {}
@@ -95,18 +96,18 @@ class RObject(REntity):
         model = {"objects": self.objects,
                 "relations": self.relations,
                 "properties": self.properties,
-                "extends": self.proto_name}
-        return json_pretty_format(model)
+                "extends": self.extends}
+        return RPickle.json_pretty_format(model)
 
     # method to recursively traverse the object
     # tree and substitute string extends, from and to
     # fields with actual references (to be done on
     # second pass when whole the structure of the model is built
     def update_references(self, root):
-        if self.proto_name is not None:
-            self.proto = root.get_object(self.proto_name)
+        if self.extends is not None:
+            self.proto = root.get_object(self.extends)
             if self.proto is None:
-                raise RException("proto_name " + self.proto_name + " cannot be found")
+                raise RException("extends " + self.extends + " cannot be found")
         for obj_name, obj in self.objects.iteritems():
             obj.update_references(root)
         for rel_name, rel in self.relations.iteritems():
@@ -120,7 +121,7 @@ class RObject(REntity):
             raise RException("object must have a nature of object")
 
         if data.has_key(EXTENDS) and data[EXTENDS] is not None:
-            obj.proto_name = data[EXTENDS]
+            obj.extends = data[EXTENDS]
 
         if data.has_key(RELATIONS) and data[RELATIONS] is not None:
             relations = data[RELATIONS]
@@ -145,7 +146,7 @@ class RObject(REntity):
 class RRelation(REntity):
     "RRelation represents Rauzy relation"
     def __init__(self):
-        self.proto_name = None
+        self.extends = None
         self.proto = None
         self.id_to_obj = {}
         self.from_ids = []
@@ -154,19 +155,18 @@ class RRelation(REntity):
         self.properties = {}
 
     def __repr__(self):
-
-        model = {"extends": self.proto_name,
+        model = {"extends": self.extends,
                 "from": self.from_ids,
                 "to": self.to_ids,
                 "directional": self.directional,
                 "properties": self.properties}
-        return json_pretty_format(model)
+        return RPicklejson_pretty_format(model)
 
     def update_references(self, root):
-        if self.proto_name is not None:
-            self.proto = root.get_relation(self.proto_name)
+        if self.extends is not None:
+            self.proto = root.get_relation(self.extends)
             if self.proto is None:
-                raise RException("relation " + self.proto_name + " cannot be found")
+                raise RException("relation " + self.extends + " cannot be found")
         for id in self.from_ids:
             obj = root.get_object(id)
             if obj is None:
@@ -181,8 +181,7 @@ class RRelation(REntity):
             raise RException("relation must have nature of relation")
 
         if data.has_key(EXTENDS) and data[EXTENDS] is not None:
-            relation.proto_name = data[EXTENDS]
-            logging.debug("todo: implement extends")
+            relation.extends = data[EXTENDS]
 
         if data.has_key(DIRECTIONAL) and data[DIRECTIONAL] is not None:
             relation.directional = data[DIRECTIONAL]
@@ -196,7 +195,6 @@ class RRelation(REntity):
         if data.has_key(FROM) and data[FROM] is not None:
             from_ids = data[FROM]
             for id in from_ids:
-                logging.debug("todo: implement relation from")
                 relation.from_ids += [id]
         else:
             raise RException("relation must have 'from'")
@@ -204,7 +202,6 @@ class RRelation(REntity):
         if data.has_key(TO) and data[TO] is not None:
             to_ids = data[TO]
             for id in to_ids:
-                logging.debug("todo: implement relation to")
                 relation.to_ids += [id]
         else:
             raise RException("relation must have 'to'")
@@ -224,6 +221,9 @@ class RModel(RObject):
             if library[NATURE] != LIBRARY:
                 raise RException("library must have nature of library")
 
+            # it is possible to mark objects and relations
+            # coming from library here with a recursive function call
+
             library[NATURE] = OBJECT
             library = RObject.parse(library)
 
@@ -231,7 +231,15 @@ class RModel(RObject):
             model.relations.update(library.relations)
 
         model.update_references(model)
-
         return model
+
+    def compare(self, other):
+        logging.debug("TODO: implement compare models")
+
+    def flatten(self):
+        logging.debug("TODO: implement flatten model")
+
+    def abstract(self):
+        logging.debug("TODO: impelement abstract model")
 
 logging.info('loading rauzy module ' + version)

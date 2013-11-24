@@ -7,14 +7,16 @@
 
 function abstract(RModel m, int n)
 	if(n>0)
+		for (r in o.relations)
+			print(r)
 		for(o in m.objects)
-			o.__repr__
+			print(o)
 			explore(o, n-1)
 
 function explore(RObject o, int n)
-	o.__repr__
+	print(o)
 	for (r in o.relations)
-		r.__repr__
+		print(r)
 	if(n>0)
 		for (o in o.objects)
 			explore(o.object, n-1)

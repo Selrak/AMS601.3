@@ -1,12 +1,11 @@
 // Pseudo-code for the abstract function.
 // Obviously then, this is an abstract comment.
 
-// Version with depth levels
+// Version with depth levels and simple printing
 // 2 functions : actual abstract function on a model,
 // and object recursive exploration (down to a given level)
 
 function abstract(RModel m, int n)
-	print(m)
 	if(n>0)
 		for(o in m.objects)
 			explore(o, n-1)
@@ -16,3 +15,22 @@ function explore(RObject o, int n)
 	if(n>0)
 		for (o in o.objects)
 			explore(o.object, n-1)
+
+// Version with depth levels, and creation of a simplified model
+// Relations being part of objects, they are added alongside them to the
+// abstract model.
+
+function abstract(RModel m, int n) returns RModel
+	RModel m_a
+	if(n>0)
+		for(o in m.objects)
+			m_a.add(o)
+			m_a = explore(o, n-1, m_a)
+	return m_a
+
+function explore(RObject o, int n, RModel m_a) returns RModel
+	if(n>0)
+		for(o in o.objects)
+			m_a.add(o)
+			explore(o, n-1, m_a)
+	return m_a

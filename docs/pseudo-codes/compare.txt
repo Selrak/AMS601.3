@@ -1,0 +1,64 @@
+# We can fairly ignore the difference in 'extends' and 'library' - it's already covered 
+# by the current implementation in Rauzy.py
+#
+# 
+----------------
+Type RauzyObject
+----------------
+function isSubsetOf (otherobj)
+  For each myp in my properties, named mypn:
+    if otherobj has property otherp named mypn then:
+      if (myp is not otherp) then:
+        return false
+    else return false
+
+  FOR each myo in my objects, named myoname :
+    if otherobj has an obj othero named myoname then: 
+      if (myo.isSubsetOf(othero) is false) then:
+        return false
+    else: 
+      return false
+
+  FOR each myr names myrname in my relations:
+    if otherobj has a relation otherr named myrname then:
+      if (myr.isSubsetOf(otherr)) then:
+        return false
+    else:
+      return false
+
+  return true
+
+------------------
+Type RauzyRelation
+------------------
+function isSubsetOf (other)
+  if my 'directional' is different from other's 'directional':
+    return false
+  if my 'from' is different from other's 'from':
+    return false:
+  if my 'to' is different from other's 'to':
+    return false:
+
+  For each myp in my properties, named mypn:
+    if other has property otherp named mypn then:
+      if (myp is not otherp) then:
+        return false
+    else return false
+
+  return true
+
+---------------
+Type RauzyModel
+---------------
+
+function __cmp__ (self,other)
+  if self.isSubsetOf(other) then:
+    if other.isSubsetOf(self) then:
+	  return 0
+	else:
+	  return -1
+  else:
+    if other.isSubsetOf(self) then:
+      return 1
+    else:
+	  return undefined

@@ -154,6 +154,7 @@ class RObject(REntity):
 
         return obj
 
+
 class RRelation(REntity):
     """"RRelation represents Rauzy relation"""
 
@@ -216,23 +217,15 @@ class RRelation(REntity):
 
         return relation
 
+
 class RModel(RObject):
     """RModel encapsulates whole the model and allows linking between objects and relation"""
 
-    def __init__(self, obj):
-        self.obj = obj
-
-    def get_relation(self, name):
-        return self.obj.get_relation(name)
-
-    def get_object(self, name):
-        return self.obj.get_object(name)
-
-    def update_references(self, root):
-        return self.obj.update_references(root)
-
-    def __repr__(self):
-        return self.obj.__repr__()
+    def __init__(self, obj=RObject()):
+        super().__init__()
+        self.objects = obj.objects
+        self.relations = obj.relations
+        self.properties = obj.properties
 
     @staticmethod
     def parse(data):

@@ -2,7 +2,7 @@
 #-*- Coding: utf-8 -*-
 
 from rauzy import RModel, RPickle, RObject
-from unittest import TestCase
+from unittest import TestCase, main
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -101,3 +101,7 @@ class Test(TestCase):
         """))
         model.objects["obj1"] = obj
         logging.debug(model)
+
+
+if __name__ == '__main__':
+    main()

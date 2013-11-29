@@ -1,60 +1,60 @@
 {
-"nature": "library",
-"objects": {
-"continent": {
-"nature": "object",
-"extends": null,
-"objects": null,
-"properties": {
-
-}
-},
-"country": {
-"nature": "object",
-"extends": null,
-"objects": null,
-"properties": {
-
-}
-}
-},
-"relations": {
-"relationship": {
-"nature": "relation",
-"extends": null,
-"from": null,
-"to": null,
-"properties": {
-"duration": "undefined (should be in years)"
-}
-},
-"peaceRelationship": {
-"nature": "relation",
-"extends": "relationship",
-"from": [
-
-],
-"to": [
-
-],
-"directional": false,
-"properties": {
-"treaty": "undefined"
-}
-},
-"economicalRelationship": {
-"nature": "relation",
-"extends": "relationship",
-"from": [
-
-],
-"to": [
-
-],
-"directional": false,
-"properties": {
-"status": "undefined"
-}
-}
-}
+  "nature": "library",
+  "objects": {
+    "continent": {
+      "nature": "object",
+      "extends": null,
+      "objects": null,
+      "properties": {
+        
+      }
+    },
+    "country": {
+      "nature": "object",
+      "extends": null,
+      "objects": null,
+      "properties": {
+        
+      }
+    }
+  },
+  "relations": {
+    "relationship": {
+      "nature": "relation",
+      "extends": null,
+      "from": null,
+      "to": null,
+      "properties": {
+        "duration": "undefined (should be in years)"
+      }
+    },
+    "peaceRelationship": {
+      "nature": "relation",
+      "extends": "relationship",
+      "from": [
+        
+      ],
+      "to": [
+        
+      ],
+      "directional": false,
+      "properties": {
+        "treaty": "undefined"
+      }
+    },
+    "economicalRelationship": {
+      "nature": "relation",
+      "extends": "relationship",
+      "from": [
+        
+      ],
+      "to": [
+        
+      ],
+      "directional": false,
+      "properties": {
+        "status": "undefined"
+      }
+    }
+  }
 }

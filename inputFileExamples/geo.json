@@ -1,109 +1,109 @@
 {
-"nature": "object",
-"library": "./inputFileExamples/Geography.json",
-"relations": {
-
-},
-"properties": {
-
-},
-"objects": {
-"Europe": {
-"nature": "object",
-"extends": "continent",
-"objects": {
-"France": {
-"nature": "object",
-"extends": "country",
-"objects": {
-
-},
-"relations": {
-"postIndependencePeace": {
-"nature": "relation",
-"extends": "peaceRelationship",
-"from": [
-"France"
-],
-"to": [
-"United States"
-],
-"directional": false,
-"properties": {
-"treaty": "Versailles",
-"duration": "230 years"
-}
-}
-}
-}
-},
-"relations": {
-"freeTradeAgreement": {
-"nature": "relation",
-"extends": "economicalRelationship",
-"from": [
-"Europe"
-],
-"to": [
-"North America"
-],
-"properties": {
-"status": "proposed"
-}
-}
-},
-"properties": {
-"population": "739 million people"
-}
-},
-"North America": {
-"nature": "object",
-"extends": "continent",
-"objects": {
-"United States": {
-"nature": "object",
-"extends": "country",
-"objects": {
-
-},
-"relations": {
-"postIndependencePeace": {
-"nature": "relation",
-"extends": "peaceRelationship",
-"from": [
-"United States"
-],
-"to": [
-"France"
-],
-"directional": false,
-"properties": {
-"treaty": "Versailles",
-"duration": "230 years",
-"Previous war": "Independence war"
-}
-}
-}
-}
-},
-"relations": {
-"freeTradeAgreement": {
-"nature": "relation",
-"extends": "economicalRelationship",
-"from": [
-"North America"
-],
-"to": [
-"Europe"
-],
-"properties": {
-"status": "proposed"
-}
-}
-},
-"properties": {
-"population": "529 million people"
-}
-}
-}
+  "nature": "object",
+  "library": "./inputFileExamples/Geography.json",
+  "relations": {
+    
+  },
+  "properties": {
+    
+  },
+  "objects": {
+    "Europe": {
+      "nature": "object",
+      "extends": "continent",
+      "objects": {
+        "France": {
+          "nature": "object",
+          "extends": "country",
+          "objects": {
+            
+          },
+          "relations": {
+            "postIndependencePeace": {
+              "nature": "relation",
+              "extends": "peaceRelationship",
+              "from": [
+                "France"
+              ],
+              "to": [
+                "United States"
+              ],
+              "directional": false,
+              "properties": {
+                "treaty": "Versailles",
+                "duration": "230 years"
+              }
+            }
+          }
+        }
+      },
+      "relations": {
+        "freeTradeAgreement": {
+          "nature": "relation",
+          "extends": "economicalRelationship",
+          "from": [
+            "Europe"
+          ],
+          "to": [
+            "North America"
+          ],
+          "properties": {
+            "status": "proposed"
+          }
+        }
+      },
+      "properties": {
+        "population": "739 million people"
+      }
+    },
+    "North America": {
+      "nature": "object",
+      "extends": "continent",
+      "objects": {
+        "United States": {
+          "nature": "object",
+          "extends": "country",
+          "objects": {
+            
+          },
+          "relations": {
+            "postIndependencePeace": {
+              "nature": "relation",
+              "extends": "peaceRelationship",
+              "from": [
+                "United States"
+              ],
+              "to": [
+                "France"
+              ],
+              "directional": false,
+              "properties": {
+                "treaty": "Versailles",
+                "duration": "230 years",
+                "Previous war": "Independence war"
+              }
+            }
+          }
+        }
+      },
+      "relations": {
+        "freeTradeAgreement": {
+          "nature": "relation",
+          "extends": "economicalRelationship",
+          "from": [
+            "North America"
+          ],
+          "to": [
+            "Europe"
+          ],
+          "properties": {
+            "status": "proposed"
+          }
+        }
+      },
+      "properties": {
+        "population": "529 million people"
+      }
+    }
+  }
 }

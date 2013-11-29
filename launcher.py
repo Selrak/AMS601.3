@@ -2,14 +2,19 @@
 #-*- Coding: utf-8 -*-
 
 from rauzy import RModel, RPickle
-import unittest
+from unittest import TestCase
 import logging
 
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
-class Test(unittest.TestCase):
+
+class Test(TestCase):
     def setUp(self):
-        logging.debug("setUp")
+        pass
+
+    def tearDown(self):
+        pass
+
     def test0(self):
         root = """
         {
@@ -71,5 +76,13 @@ class Test(unittest.TestCase):
         self.assertIsNone(model.get_relation("rel2"))
         logging.debug(model)
 
+    def test3(self):
+        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        model = RModel.parse(RPickle.text_to_dict(root))
+        logging.debug(model)
 
-unittest.main()
+    def test4(self):
+        root = RPickle.file_to_text("inputFileExamples/sechecheveuxkekwa.json")
+        model = RModel.parse(RPickle.text_to_dict(root))
+        logging.debug(model)
+

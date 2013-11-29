@@ -1,141 +1,109 @@
-"Europe" : {
-    "nature": "object",
-    "extends": "continent",
-    "objects": [
-    	"France" : {
-		"nature" : "object",
-		"extends" : "country",
-		"objects" : [],
-		"relations" : [
-			"postIndependancePeace" : {
-				"nature" : "relation",
-				"extends" : "peaceRelationship",
-				"from" : "France",
-				"to" : "United States",
-				"directional" : "false",
-				"properties" : [
-					"treaty" : "Versailles",
-					"duration" : "230 years"
-					],
-				"library" : "Geography"
-				}
-			]
-						
-	}
-    		],
-    "relations": [
-    		"freeTradeAgreement" : {
-			"nature" : "relation",
-			"extends" : "economicalRelationship",
-			"from" : "Europe",
-			"to" : "North America",
-			"properties" : [
-				"status" : "proposed"
-				],
-			"library" : "Geography"
+{
+"nature": "object",
+"library": "./inputFileExamples/Geography.json",
+"relations": {
 
-			},
-    "properties": [
-    		"population" : "739 million people"
-    	],
-    "library": "Geography"
+},
+"properties": {
+
+},
+"objects": {
+"Europe": {
+"nature": "object",
+"extends": "continent",
+"objects": {
+"France": {
+"nature": "object",
+"extends": "country",
+"objects": {
+
+},
+"relations": {
+"postIndependencePeace": {
+"nature": "relation",
+"extends": "peaceRelationship",
+"from": [
+"France"
+],
+"to": [
+"United States"
+],
+"directional": false,
+"properties": {
+"treaty": "Versailles",
+"duration": "230 years"
 }
-
-"North America" : {
-    "nature": "object",
-    "extends": "continent",
-    "objects": [
-    	"United States" : {
-		"nature" : "object",,
-		"extends" : "country",
-		"objects" : [],
-		"relations" : [
-			"postIndependancePeace" : {
-				"nature" : "relation",
-				"extends" : "peaceRelationship",
-				"from" : "United States",
-				"to" : "France",
-				"directional" : "false",
-				"properties" : [
-					"treaty" : "Versailles",
-					"duration" : "230 years",
-					"Previous war" : "Independence war"
-					]
-				}
-			],
-		"library" : "Geography"
-						
-	}
-    		],
-    "relations": [
-    		"freeTradeAgreement" : {
-			"nature" : "relation",
-			"extends" : "economicRelationship",
-			"from" : "North America",
-			"to" : "Europe",
-			"properties" : [
-				"status" : "proposed"
-				],
-			"library" : "Geography"
-
-			},
-    "properties": [
-    		"population" : "529 million people"
-    	],
-    "library": "Geography"
 }
-
-"Geography" : {
-    "nature": "library",
-
-    "objects" : [
-    	"continent" : {
-		"nature" : "object",
-		"extends" : null,
-		"objects" : null,
-		"properties" : []
-		}
-
-    	"country" : {
-		"nature" : "object",
-		"extends" : null,
-		"objects" : null,
-		"properties" : []
-		}
-	],
-
-    "relations": [
-    	"relationship" : {
-		"nature" : "relation",
-		"extends" : null,
-		"from" : null,
-		"to" : null,
-		"properties" : [
-			"duration" : "undefined (should be in years)"
-			]
-		},
-
-        "peaceRelationship": {
-            "nature": "relation",
-            "extends": "relationship",
-            "from": [],
-            "to": [],
-            "directional": false,
-            "properties": [
-	    	"treaty" : "undefined"
-	    	]
-        }
-
-        "economicRelationship": {
-            "nature": "relation",
-            "extends": "relationship",
-            "from": [],
-            "to": [],
-            "directional": false,
-            "properties": [
-	    	"status" : "undefined"
-	    	]
-        }
-    ]
 }
-            
+}
+},
+"relations": {
+"freeTradeAgreement": {
+"nature": "relation",
+"extends": "economicalRelationship",
+"from": [
+"Europe"
+],
+"to": [
+"North America"
+],
+"properties": {
+"status": "proposed"
+}
+}
+},
+"properties": {
+"population": "739 million people"
+}
+},
+"North America": {
+"nature": "object",
+"extends": "continent",
+"objects": {
+"United States": {
+"nature": "object",
+"extends": "country",
+"objects": {
+
+},
+"relations": {
+"postIndependencePeace": {
+"nature": "relation",
+"extends": "peaceRelationship",
+"from": [
+"United States"
+],
+"to": [
+"France"
+],
+"directional": false,
+"properties": {
+"treaty": "Versailles",
+"duration": "230 years",
+"Previous war": "Independence war"
+}
+}
+}
+}
+},
+"relations": {
+"freeTradeAgreement": {
+"nature": "relation",
+"extends": "economicalRelationship",
+"from": [
+"North America"
+],
+"to": [
+"Europe"
+],
+"properties": {
+"status": "proposed"
+}
+}
+},
+"properties": {
+"population": "529 million people"
+}
+}
+}
+}

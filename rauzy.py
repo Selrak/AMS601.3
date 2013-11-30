@@ -24,11 +24,16 @@ LIBRARY = "library"
 class REncoder(json.JSONEncoder):
     def default(self, o):
         d = o.__dict__.copy()
-        for key in ("id_to_obj", "proto"):
+        block = ("id_to_obj", "proto")
+        for key in block:
             try:
                 del d[key]
             except KeyError:
                 pass
+        substitutions = (("from_ids", "from"), ("to_ids", "to"))
+        for f, t in [(v[0], v[1]) for v in substitutions]:
+            if f in d:
+                d[t] = d.pop(f)
         return d
 
 class RPickle(object):
@@ -104,17 +109,15 @@ class RObject(REntity):
         self.properties = {}
 
     def __repr__(self):
-        model = {"objects": self.objects,
-                 "relations": self.relations,
-                 "properties": self.properties,
-                 "extends": self.extends}
-        return RPickle.json_pretty_format(model)
+        return RPickle.json_pretty_format(self)
 
     # method to recursively traverse the object
     # tree and substitute string extends, from and to
     # fields with actual references (to be done on
     # second pass when whole the structure of the model is built
-    def update_references(self, root):
+    def update_references(self, root=None):
+        if root is None:
+            root = self
         if self.extends is not None:
             self.proto = root.get_object(self.extends)
             if self.proto is None:
@@ -168,14 +171,11 @@ class RRelation(REntity):
         self.properties = {}
 
     def __repr__(self):
-        model = {"extends": self.extends,
-                 "from": self.from_ids,
-                 "to": self.to_ids,
-                 "directional": self.directional,
-                 "properties": self.properties}
-        return RPickle.json_pretty_format(model)
+        return RPickle.json_pretty_format(self)
 
-    def update_references(self, root):
+    def update_references(self, root=None):
+        if root is None:
+            root = self
         if self.extends is not None:
             self.proto = root.get_relation(self.extends)
             if self.proto is None:
@@ -185,6 +185,7 @@ class RRelation(REntity):
             if obj is None:
                 raise RException("object " + id + " cannot be found")
             self.id_to_obj[id] = obj
+
 
     @staticmethod
     def parse(data):
@@ -223,18 +224,21 @@ class RModel(RObject):
 
     def __init__(self, obj=RObject()):
         super().__init__()
-        self.objects = obj.objects
-        self.relations = obj.relations
-        self.properties = obj.properties
+        self.__dict__ = obj.__dict__
 
     @staticmethod
     def parse(data):
-        model = RObject.parse(data)
+        model = RModel(RObject.parse(data))
 
         if LIBRARY in data and data[LIBRARY] is not None:
             logging.debug("library field is not empty, loading library")
             library = RPickle.file_to_dict(data[LIBRARY])
+            model.library(library)
 
+        model.update_references(model)
+        return model
+
+    def library(self, library):
             if library[NATURE] != LIBRARY:
                 raise RException("library must have nature of library")
 
@@ -244,11 +248,9 @@ class RModel(RObject):
             library[NATURE] = OBJECT
             library = RObject.parse(library)
 
-            model.objects.update(library.objects)
-            model.relations.update(library.relations)
+            self.objects.update(library.objects)
+            self.relations.update(library.relations)
 
-        model.update_references(model)
-        return RModel(model)
 
     def compare(self, other):
         logging.debug("TODO: implement compare models")

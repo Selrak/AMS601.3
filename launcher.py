@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- Coding: utf-8 -*-
 
-from rauzy import RModel, RPickle, RObject
+from rauzy import RModel, RPickle, RObject, RRelation
 from unittest import TestCase
 import logging
 
@@ -90,14 +90,19 @@ class Test(TestCase):
         model = RModel()
         obj = RObject.parse(RPickle.text_to_dict("""
         {
-            "nature": "object",
-            "objects": {
-            },
-            "relations": {
-            },
-            "properties": {
-            }
+            "nature": "object"
         }
         """))
+        obj.properties["prop1"] = "property1"
+        rel = RRelation.parse(RPickle.text_to_dict("""
+        {
+            "nature": "relation",
+            "from": ["obj1"],
+            "to": ["obj1"]
+        }
+        """))
+        rel.properties["prop1"] = "property1"
         model.objects["obj1"] = obj
+        model.relations["rel1"] = rel
+        model.update_references()
         logging.debug(model)

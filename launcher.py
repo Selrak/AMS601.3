@@ -107,6 +107,12 @@ class Test(TestCase):
         model.update_references()
         logging.debug(model)
 
+    def test5(self):
+        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        model = RModel.parse(RPickle.text_to_dict(root))
+
+        logging.debug(model.abstract(1))
+
 
 if __name__ == '__main__':
     main()

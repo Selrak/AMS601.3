@@ -3,7 +3,7 @@
 
 import json
 import logging
-import pprint
+import copy
 
 version = "0.1"
 logging.basicConfig(level=logging.DEBUG)
@@ -258,8 +258,36 @@ class RModel(RObject):
     def flatten(self):
         logging.debug("TODO: implement flatten model")
 
-    def abstract(self):
-        logging.debug("TODO: implement abstract model")
+    def abstract(self, levels):
+        return RModelAbstraction.abstract(self, levels)
 
+
+class RModelAbstraction(object):
+    @staticmethod
+    def process(model, level):
+        if level > 0:
+            try:
+                for obj_name, obj in model.objects.items():
+                    RModelAbstraction.process(obj, level - 1)
+            except AttributeError:
+                pass
+            try:
+                for rel_name, rel in model.relations.items():
+                    RModelAbstraction.process(rel, level - 1)
+            except AttributeError:
+                pass
+        else:
+            model.objects = {}
+            model.relations = {}
+            model.properties = {}
+
+
+    @staticmethod
+    def abstract(model_ref, levels):
+        model = copy.deepcopy(model_ref)
+
+        RModelAbstraction.process(model, levels)
+
+        return model
 
 logging.info('loading Rauzy module ' + version)

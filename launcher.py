@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #-*- Coding: utf-8 -*-
 
-from rauzy import RModel, RPickle, RObject, RRelation
-from unittest import TestCase
+from rauzy import RModel, RPickle, RObject
+from unittest import TestCase, main
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -106,3 +106,7 @@ class Test(TestCase):
         model.relations["rel1"] = rel
         model.update_references()
         logging.debug(model)
+
+
+if __name__ == '__main__':
+    main()

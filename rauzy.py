@@ -256,10 +256,42 @@ class RModel(RObject):
         logging.debug("TODO: implement compare models")
 
     def flatten(self):
-        logging.debug("TODO: implement flatten model")
+        return RModelFlattening.flatten(self)
 
     def abstract(self, levels):
         return RModelAbstraction.abstract(self, levels)
+
+class RModelFlattening(object):
+    @staticmethod
+    def process(model_ref, model):
+        try:
+            for obj_name in list(model_ref.objects.keys()):
+                obj = model_ref.objects[obj_name]
+                RModelFlattening.process(obj, model)
+                model.objects[obj_name] = model_ref.objects.pop(obj_name)
+        except AttributeError:
+            pass
+
+        try:
+            for rel_name in list(model_ref.relations.keys()):
+                rel = model_ref.relations[rel_name]
+                RModelFlattening.process(rel, model)
+                model.relations[rel_name] = model_ref.relations.pop(rel_name)
+        except AttributeError:
+            pass
+
+        try:
+            for prop_name in list(model_ref.properties.keys()):
+                model.properties[prop_name] = model_ref.properties.pop(prop_name)
+        except AttributeError:
+            pass
+
+    @staticmethod
+    def flatten(model_ref):
+        model_ref = copy.deepcopy(model_ref)
+        model = RModel()
+        RModelFlattening.process(model_ref, model)
+        return model
 
 
 class RModelAbstraction(object):
@@ -285,9 +317,7 @@ class RModelAbstraction(object):
     @staticmethod
     def abstract(model_ref, levels):
         model = copy.deepcopy(model_ref)
-
         RModelAbstraction.process(model, levels)
-
         return model
 
 logging.info('loading Rauzy module ' + version)

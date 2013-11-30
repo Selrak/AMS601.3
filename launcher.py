@@ -110,9 +110,12 @@ class Test(TestCase):
     def test5(self):
         root = RPickle.file_to_text("inputFileExamples/geo.json")
         model = RModel.parse(RPickle.text_to_dict(root))
-
         logging.debug(model.abstract(1))
 
+    def test6(self):
+        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        model = RModel.parse(RPickle.text_to_dict(root))
+        logging.debug(model.flatten())
 
 if __name__ == '__main__':
     main()

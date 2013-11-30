@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 #-*- Coding: utf-8 -*-
 
-from rauzy import RModel, RPickle, RObject, RRelation
 from unittest import TestCase, main
 import logging
+
+from rauzy import RModel, RPickle, RObject, RRelation
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -15,7 +17,7 @@ class Test(TestCase):
     def tearDown(self):
         pass
 
-    def test0(self):
+    def test0_basicparsing1(self):
         root = """
         {
             "nature": "object",
@@ -32,7 +34,7 @@ class Test(TestCase):
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model)
 
-    def test1(self):
+    def test1_basicparsing2(self):
         root = """
         {
             "nature": "object",
@@ -76,17 +78,17 @@ class Test(TestCase):
         self.assertIsNone(model.get_relation("rel2"))
         logging.debug(model)
 
-    def test2(self):
+    def test2_example1(self):
         root = RPickle.file_to_text("inputFileExamples/geo.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model)
 
-    def test3(self):
+    def test3_example2(self):
         root = RPickle.file_to_text("inputFileExamples/sechecheveuxkekwa.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model)
 
-    def test4(self):
+    def test4_manual_model_building(self):
         model = RModel()
         obj = RObject.parse(RPickle.text_to_dict("""
         {
@@ -107,15 +109,45 @@ class Test(TestCase):
         model.update_references()
         logging.debug(model)
 
-    def test5(self):
+    def test5_abstract(self):
         root = RPickle.file_to_text("inputFileExamples/geo.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model.abstract(1))
 
-    def test6(self):
+    def test6_flatten(self):
         root = RPickle.file_to_text("inputFileExamples/geo.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model.flatten())
+
+    def test7_comparison(self):
+        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        model1 = RModel.parse(RPickle.text_to_dict(root))
+        model2 = RModel.parse(RPickle.text_to_dict(root))
+
+        # changing property in an object
+        model1.properties["prop1"] = "old_prop"
+        model2.properties["prop1"] = "changed_prop"
+
+        # adding property in an object
+        model2.properties["prop2"] = "new_prop"
+
+        # removing property in an object
+        del model2.objects["Europe"].properties["population"]
+
+        # changing property in a relation
+        model1.objects["Europe"].objects["France"].relations["postIndependencePeace"].properties["duration"] = "230 years"
+        model2.objects["Europe"].objects["France"].relations["postIndependencePeace"].properties["duration"] = "100 years"
+
+        # adding property in a relation
+        model2.objects["Europe"].objects["France"].relations["postIndependencePeace"].properties["duration2"] = "300 years"
+
+        # removing property in a relation
+        del model2.objects["Europe"].objects["France"].relations["postIndependencePeace"].properties["treaty"]
+
+        # todo: changes in objects, relations (incl. to and from)
+
+        model1.compare(model2)
+
 
 if __name__ == '__main__':
     main()

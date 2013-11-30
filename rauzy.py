@@ -36,6 +36,7 @@ class REncoder(json.JSONEncoder):
                 d[t] = d.pop(f)
         return d
 
+
 class RPickle(object):
     """Persistence layer utility class"""
 
@@ -62,6 +63,7 @@ class RPickle(object):
 class RException(Exception):
     """Base exception class for the Rauzy language project"""
     pass
+
 
 class REntity(object):
     """Base entity object that contains methods common to RObject, RRelation
@@ -239,27 +241,106 @@ class RModel(RObject):
         return model
 
     def library(self, library):
-            if library[NATURE] != LIBRARY:
-                raise RException("library must have nature of library")
+        if library[NATURE] != LIBRARY:
+            raise RException("library must have nature of library")
 
-            # it is possible to mark objects and relations
-            # coming from library here with a recursive function call
+        library[NATURE] = OBJECT
+        library = RObject.parse(library)
 
-            library[NATURE] = OBJECT
-            library = RObject.parse(library)
-
-            self.objects.update(library.objects)
-            self.relations.update(library.relations)
+        self.objects.update(library.objects)
+        self.relations.update(library.relations)
 
 
     def compare(self, other):
-        logging.debug("TODO: implement compare models")
+        return RModelComparison.compare_object(self, other)
 
     def flatten(self):
         return RModelFlattening.flatten(self)
 
     def abstract(self, levels):
         return RModelAbstraction.abstract(self, levels)
+
+class RModelComparison(object):
+    @staticmethod
+    def key_changes(keys1, keys2):
+        added = []
+        deleted = []
+        common = []
+
+        keys = keys1 + keys2
+        for k in keys1:
+            if k in keys2:
+                common.append(k)
+            else:
+                deleted.append(k)
+        for k in keys2:
+            if k not in keys1:
+                added.append(k)
+
+        return added, deleted, common
+
+    @staticmethod
+    def print_added(nature, path):
+        print(nature + " " + path + " was added")
+
+    @staticmethod
+    def print_removed(nature, path):
+        print(nature + " " + path + " was deleted")
+
+    @staticmethod
+    def compare_relation(rel1, rel2, path=''):
+
+        to_added, to_removed, to_common \
+            = RModelComparison.key_changes(rel1.to_ids, rel2.to_ids)
+        
+        from_added, from_removed, from_common \
+            = RModelComparison.key_changes(rel1.from_ids, rel2.from_ids)
+        
+        for k in to_added + from_added:
+            RModelComparison.print_added("relation", path + '/' + k)
+            
+        for k in to_removed + from_removed:
+            RModelComparison.print_removed("relation", path + '/' + k)
+
+        RModelComparison.compare_properties(rel1.properties, rel2.properties, path)
+
+    @staticmethod
+    def compare_properties(props1, props2, path=''):
+        prop_added, prop_removed, prop_common \
+            = RModelComparison.key_changes(list(props1.keys()), list(props2.keys()))
+
+        for k in prop_added:
+            RModelComparison.print_added("property", path + '/' + k)
+
+        for k in prop_removed:
+            RModelComparison.print_removed("property", path + '/' + k)
+
+        for k in prop_common:
+            if props1[k] != props2[k]:
+                print("property " + path + '/' + k + " changed from " + props1[k] + " to " + props2[k])
+
+    @staticmethod
+    def compare_object(model1, model2, path=''):
+
+        obj_added, obj_removed, obj_common \
+            = RModelComparison.key_changes(list(model1.objects.keys()), list(model2.objects.keys()))
+
+        rel_added, rel_removed, rel_common \
+            = RModelComparison.key_changes(list(model1.relations.keys()), list(model2.relations.keys()))
+
+        for k in obj_added + rel_added:
+            RModelComparison.print_added("object", path + '/' + k)
+
+        for k in obj_removed + rel_removed:
+            RModelComparison.print_removed("object", path + '/' + k)
+
+        for k in obj_common:
+            RModelComparison.compare_object(model1.objects[k], model2.objects[k], path + '/' + k)
+
+        for k in rel_common:
+            RModelComparison.compare_relation(model1.relations[k], model2.relations[k], path + '/' + k)
+
+        RModelComparison.compare_properties(model1.properties, model2.properties, path)
 
 class RModelFlattening(object):
     @staticmethod
@@ -319,5 +400,6 @@ class RModelAbstraction(object):
         model = copy.deepcopy(model_ref)
         RModelAbstraction.process(model, levels)
         return model
+
 
 logging.info('loading Rauzy module ' + version)

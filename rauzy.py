@@ -24,7 +24,7 @@ LIBRARY = "library"
 class REncoder(json.JSONEncoder):
     def default(self, o):
         d = o.__dict__.copy()
-        block = ("id_to_obj", "proto")
+        block = ("id_to_obj", "extends_ref")
         for key in block:
             try:
                 del d[key]
@@ -104,8 +104,8 @@ class REntity(object):
         try:
             return self.properties[name]
         except KeyError:
-            if self.proto is not None:
-                return self.proto.get_property(name)
+            if self.extends_ref is not None:
+                return self.extends_ref.get_property(name)
         return None
 
 
@@ -115,7 +115,7 @@ class RObject(REntity):
     def __init__(self):
         self.nature = "object"
         self.extends = None
-        self.proto = None
+        self.extends_ref = None
         self.objects = {}
         self.relations = {}
         self.properties = {}
@@ -131,8 +131,8 @@ class RObject(REntity):
         if root is None:
             root = self
         if self.extends is not None:
-            self.proto = root.get_object(self.extends)
-            if self.proto is None:
+            self.extends_ref = root.get_object(self.extends)
+            if self.extends_ref is None:
                 raise RException("extends " + self.extends + " cannot be found")
         for obj_name, obj in self.objects.items():
             obj.update_references(root)
@@ -176,7 +176,7 @@ class RRelation(REntity):
     def __init__(self):
         self.nature = "relation"
         self.extends = None
-        self.proto = None
+        self.extends_ref = None
         self.id_to_obj = {}
         self.from_ids = []
         self.to_ids = []
@@ -190,8 +190,8 @@ class RRelation(REntity):
         if root is None:
             root = self
         if self.extends is not None:
-            self.proto = root.get_relation(self.extends)
-            if self.proto is None:
+            self.extends_ref = root.get_relation(self.extends)
+            if self.extends_ref is None:
                 raise RException("relation " + self.extends + " cannot be found")
         for id in self.from_ids:
             obj = root.get_object(id)

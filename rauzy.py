@@ -30,7 +30,7 @@ class REncoder(json.JSONEncoder):
                 del d[key]
             except KeyError:
                 pass
-        substitutions = (("from_ids", "from"), ("to_ids", "to"), ("_library", "library"))
+        substitutions = (("from_ids", "from"), ("to_ids", "to"))
         for f, t in [(v[0], v[1]) for v in substitutions]:
             if f in d:
                 d[t] = d.pop(f)
@@ -238,7 +238,7 @@ class RModel(RObject):
     def __init__(self, obj=RObject()):
         super().__init__()
         self.__dict__ = obj.__dict__
-        self._library = ""
+        self.library = ""
 
     @staticmethod
     def parse(data):
@@ -248,12 +248,12 @@ class RModel(RObject):
             logging.debug("library field is not empty, loading library")
             library = RPickle.file_to_dict(data[LIBRARY])
             model._library = data[LIBRARY]
-            model.library(library)
+            model.load_library(library)
 
         model.update_references(model)
         return model
 
-    def library(self, library):
+    def load_library(self, library):
         if library[NATURE] != LIBRARY:
             raise RException("library must have nature of library")
 

@@ -121,6 +121,7 @@ class Test(TestCase):
 
     def test7_comparison(self):
         root = RPickle.file_to_text("inputFileExamples/geo.json")
+
         model1 = RModel.parse(RPickle.text_to_dict(root))
         model2 = RModel.parse(RPickle.text_to_dict(root))
 
@@ -144,9 +145,50 @@ class Test(TestCase):
         # removing property in a relation
         del model2.objects["Europe"].objects["France"].relations["postIndependencePeace"].properties["treaty"]
 
-        # todo: changes in objects, relations (incl. to and from)
+        # objects
+        obj_repr = \
+        """
+            {
+                "nature": "object"
+            }
+        """
+
+        model2.objects["added_object"] = RObject.parse(RPickle.text_to_dict(obj_repr))
+        model1.objects["deleted_object"] = RObject.parse(RPickle.text_to_dict(obj_repr))
+
+        # relations
+        relation_repr = \
+        """
+            {
+                "nature": "relation"
+            }
+        """
+
+        model2.relations["added_relation"] = RRelation.parse(RPickle.text_to_dict(relation_repr))
+        model1.relations["deleted_relation"] = RRelation.parse(RPickle.text_to_dict(relation_repr))
+        model1.relations["common_relation"] = RRelation.parse(RPickle.text_to_dict(relation_repr))
+        model2.relations["common_relation"] = RRelation.parse(RPickle.text_to_dict(relation_repr))
+        model1.relations["common_relation"].from_ids.append("France")
+        model2.relations["common_relation"].from_ids.append("Europe")
+        model2.relations["common_relation"].to_ids.append("North America")
+
+        model1.update_references()
+        model2.update_references()
+        model1.compare(model2)
+
+    def test8_output(self):
+        filepath = '/tmp/rtest.txt'
+        root = RPickle.file_to_text("inputFileExamples/geo.json")
+
+        model1 = RModel.parse(RPickle.text_to_dict(root))
+        RPickle.text_to_file(filepath, RPickle.to_text(model1))
+
+        root2 = RPickle.file_to_text(filepath)
+        model2 = RModel.parse(RPickle.text_to_dict(root2))
 
         model1.compare(model2)
+        model2.compare(model1)
+
 
 
 if __name__ == '__main__':

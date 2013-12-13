@@ -56,6 +56,15 @@ class RPickle(object):
         return RPickle.text_to_dict(text)
 
     @staticmethod
+    def to_text(rentity):
+        return RPickle.json_pretty_format(rentity)
+
+    @staticmethod
+    def text_to_file(filename, text):
+        with open(filename, 'w') as myfile:
+            myfile.write(text)
+
+    @staticmethod
     def json_pretty_format(js):
         return json.dumps(js, sort_keys=True, indent=4, cls=REncoder)
 
@@ -104,6 +113,7 @@ class RObject(REntity):
     """RObject represents Rauzy object"""
 
     def __init__(self):
+        self.nature = "object"
         self.extends = None
         self.proto = None
         self.objects = {}
@@ -164,6 +174,7 @@ class RRelation(REntity):
     """"RRelation represents Rauzy relation"""
 
     def __init__(self):
+        self.nature = "relation"
         self.extends = None
         self.proto = None
         self.id_to_obj = {}
@@ -292,15 +303,18 @@ class RModelComparison(object):
 
         to_added, to_removed, to_common \
             = RModelComparison.key_changes(rel1.to_ids, rel2.to_ids)
-        
+
         from_added, from_removed, from_common \
             = RModelComparison.key_changes(rel1.from_ids, rel2.from_ids)
-        
-        for k in to_added + from_added:
-            RModelComparison.print_added("relation", path + '/' + k)
-            
-        for k in to_removed + from_removed:
-            RModelComparison.print_removed("relation", path + '/' + k)
+
+        for k in to_added:
+            RModelComparison.print_added("relation 'to'", path + '/' + k)
+        for k in from_added:
+            RModelComparison.print_added("relation 'from'", path + '/' + k)
+        for k in to_removed:
+            RModelComparison.print_removed("relation 'to'", path + '/' + k)
+        for k in from_removed:
+            RModelComparison.print_removed("relation 'from'", path + '/' + k)
 
         RModelComparison.compare_properties(rel1.properties, rel2.properties, path)
 
@@ -393,7 +407,6 @@ class RModelAbstraction(object):
             model.objects = {}
             model.relations = {}
             model.properties = {}
-
 
     @staticmethod
     def abstract(model_ref, levels):

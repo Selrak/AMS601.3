@@ -5,7 +5,7 @@ import json
 import logging
 import copy
 
-version = "0.1"
+version = "0.2"
 logging.basicConfig(level=logging.DEBUG)
 
 NATURE = "nature"

@@ -247,7 +247,7 @@ class RModel(RObject):
         if LIBRARY in data and data[LIBRARY] is not None:
             logging.debug("library field is not empty, loading library")
             library = RPickle.file_to_dict(data[LIBRARY])
-            model._library = data[LIBRARY]
+            model.library = data[LIBRARY]
             model.load_library(library)
 
         model.update_references(model)
@@ -280,7 +280,6 @@ class RModelComparison(object):
         deleted = []
         common = []
 
-        keys = keys1 + keys2
         for k in keys1:
             if k in keys2:
                 common.append(k)

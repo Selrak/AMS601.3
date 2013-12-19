@@ -1,0 +1,15 @@
+abstract(model, levels)
+    model_copy ← clone(model)
+    abstract_helper(model_copy)
+    return model_copy
+
+abstract_helper(model, level)
+    if level > 0
+        foreach obj in model.objects
+            abstract_helper(obj, level - 1)
+        foreach rel in model.relations
+            abstract_helper(rel, level - 1)
+    else
+        model.objects ← {}
+        model.relations ← {}
+        model.properties ← {}

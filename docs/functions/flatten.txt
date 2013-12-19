@@ -1,0 +1,15 @@
+flatten(model)
+    model_ref = clone(model)
+    model ← empty_model
+    flatten_helper(model_ref, model)
+    return model
+
+flatten_helper(entity_ref, model)
+    foreach obj in entity_ref.objects
+            flatten_helper(obj, model)
+            model.objects ← obj
+    foreach rel in entity_ref.relations
+            flatten_helper(rel, model)
+            model.relations ← rel
+    foreach prop in entity_ref.properties
+            model.properties ← prop

@@ -1,0 +1,70 @@
+key_changes(keys1, keys2)
+    added, deleted, removed ← [ ], [ ], [ ]
+
+    foreach key in keys1
+        if k in keys2
+            common ← key
+        else
+            deleted ← key
+
+    foreach key in keys2
+        if k not in keys1
+            added ← key
+
+    return added, deleted, common
+
+compare_relation(rel1, rel2)
+    to_added, to_removed, to_common ← key_changes(rel1.to,  rel2.to)
+    from_added, from_removed, from_common ← key_changes(rel1.from,  rel2.from)
+
+    foreach k in to_added
+print(k to added)
+
+    foreach k in from_added
+print(k from added)
+
+    foreach k in to_removed
+print(k to removed)
+
+    foreach k in from_removed
+print(k from removed)
+
+compare_properties(rel1.properties, rel2.properties)
+
+compare_properties(props1, props2)
+    prop_added, prop_removed, prop_common ← key_changes(props1, props2)
+
+    foreach k in prop_added
+        print(k added)
+
+    foreach k in prop_removed
+        print(k removed)
+
+    foreach k in prop_common
+        if props1[k] <> props2[k]
+            print(k changed)
+
+compare_object(obj1, obj2)
+    obj_added, obj_removed, obj_common ← key_changes(obj1.objects, obj2.objects)
+    rel_added, rel_removed, rel_common ← key_changes(obj1.relations, obj2.relations)
+
+    foreach k in obj_added
+        print(k added)
+
+    foreach k in obj_removed
+        print(k removed)
+
+    foreach k in rel_added
+        print(k added)
+
+    foreach k in rel_removed
+        print(k removed)
+
+    foreach k in obj_common
+        compare_object(obj1.objects[k], obj2.objects[k])
+
+    foreach k in rel_common
+        compare_relation(obj1.relations[k], obj2.relations[k])
+
+    compare_properties(obj1.properties, obj2.properties)
+

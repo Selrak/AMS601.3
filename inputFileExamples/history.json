@@ -1,6 +1,6 @@
 {
   "nature": "object",
-  "library": "./inputFileExamples/Geography.json",
+  "library": "./inputFileExamples/geography.json",
   "relations": {
     
   },

@@ -28,7 +28,7 @@ class Test(TestCase):
                 "prop1": "value1",
                 "prop2": "value2"
                 },
-            "library": "./inputFileExamples/library.json"
+            "library": "./inputFileExamples/generic.json"
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))
@@ -68,7 +68,7 @@ class Test(TestCase):
                 }
             },
             "properties": {},
-            "library": "./inputFileExamples/library.json"
+            "library": "./inputFileExamples/generic.json"
         }
         """
         model = RModel.parse(RPickle.text_to_dict(root))
@@ -79,12 +79,12 @@ class Test(TestCase):
         logging.debug(model)
 
     def test2_example1(self):
-        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        root = RPickle.file_to_text("inputFileExamples/history.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model)
 
     def test3_example2(self):
-        root = RPickle.file_to_text("inputFileExamples/sechecheveuxkekwa.json")
+        root = RPickle.file_to_text("inputFileExamples/sechecheveux.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model)
 
@@ -110,17 +110,17 @@ class Test(TestCase):
         logging.debug(model)
 
     def test5_abstract(self):
-        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        root = RPickle.file_to_text("inputFileExamples/history.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model.abstract(1))
 
     def test6_flatten(self):
-        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        root = RPickle.file_to_text("inputFileExamples/history.json")
         model = RModel.parse(RPickle.text_to_dict(root))
         logging.debug(model.flatten())
 
     def test7_comparison(self):
-        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        root = RPickle.file_to_text("inputFileExamples/history.json")
 
         model1 = RModel.parse(RPickle.text_to_dict(root))
         model2 = RModel.parse(RPickle.text_to_dict(root))
@@ -178,7 +178,7 @@ class Test(TestCase):
 
     def test8_output(self):
         filepath = '/tmp/rtest.txt'
-        root = RPickle.file_to_text("inputFileExamples/geo.json")
+        root = RPickle.file_to_text("inputFileExamples/history.json")
 
         model1 = RModel.parse(RPickle.text_to_dict(root))
         RPickle.text_to_file(filepath, RPickle.to_text(model1))
